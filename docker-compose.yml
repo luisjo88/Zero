@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  zero:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zero-app
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://zero:strongpassword@postgres:5432/zero
+      NEXTAUTH_URL: https://mail.yourdomain.com
+      NEXTAUTH_SECRET: change_this_to_a_long_random_string
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    networks:
+      - proxy_net
+
+  postgres:
+    image: postgres:16
+    container_name: zero-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zero
+      POSTGRES_USER: zero
+      POSTGRES_PASSWORD: strongpassword
+    volumes:
+      - zero_pgdata:/var/lib/postgresql/data
+    networks:
+      - proxy_net
+
+volumes:
+  zero_pgdata:
+
+networks:
+  proxy_net:
+    external: true
