@@ -4,7 +4,7 @@ services:
   zero:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: apps/server/Dockerfile
     container_name: zero-app
     restart: unless-stopped
     depends_on:
